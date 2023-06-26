@@ -29,7 +29,20 @@
         </select>
       </div>
     </div>
-    <table class="tabla">
+    <div class="date-container">
+      <div>
+        <label for="inicial">Fecha Inicial:</label>
+        <input class="entradas" type="date" id="inicial" v-model="inicial">
+        <label for="final">Fecha Final:</label>
+        <input class="entradas" type="date" id="final" v-model="final">
+      </div>
+      <div class="btn-container">
+        <button class="btn-export pdf" @click="handlePDF">Exportar PDF</button>
+        <button class="btn-export" @click="handleXLS">Exportar XLS</button>
+      </div>
+     
+    </div>
+    <table class="tabla" id="tabla">
     <thead>
       <tr>
         <th>ID TABLE</th>
@@ -57,12 +70,20 @@
           <td>{{ record.expertise_id }}</td>
           <td>{{ record.status }}</td>
       </tr>
+      <tr v-if="leakedRecords.length===0">
+        <td colspan="10">
+          Sin Registros para las especificaciones ingresadas...
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
 </template>
 
 <script>
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 import {defineAsyncComponent} from 'vue'
 import {expertises,cultural_rights,nacs} from '../assets/data-selects'
 import {storeToRefs} from 'pinia'
@@ -88,8 +109,9 @@ export default {
         nacionalidad:null,
         nombre:null,
         entradas:10,
-        estado:null
-
+        estado:null,
+        inicial:null,
+        final:null
     }
   },
   methods:{
@@ -110,7 +132,24 @@ export default {
       if(this.estado){
         this.leakedRecords=this.leakedRecords.filter(record=>record.status===this.estado)
       }
+      if(this.inicial&&this.final){
+        this.leakedRecords=this.leakedRecords.filter(record=>(new Date(record.activity_date).getTime()>=new Date(this.inicial).getTime() && new Date(record.activity_date).getTime()<=new Date(this.final).getTime()))
+      }
       this.leakedRecords=this.leakedRecords.slice(0,this.entradas)
+    },
+    handlePDF(){
+      const doc = new jsPDF();
+      const tablaHTML=document.getElementById('tabla');
+      html2canvas(tablaHTML).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 180; // Anchura de la imagen en mm (ajusta según tus necesidades)
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Calcula la altura proporcional
+      doc.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+      doc.save('tabla.pdf');
+      });
+    },
+    handleXLS(){
+      alert('Exportando a XLS')
     }
   },
   watch:{
@@ -131,6 +170,12 @@ export default {
     },
     estado(){
       this.filterRecords()
+    },
+    inicial(){
+      this.filterRecords()
+    },
+    final(){
+      this.filterRecords()
     }
   },
   mounted(){
@@ -148,7 +193,7 @@ export default {
   border-collapse: collapse;
   background-color: #ffffff;
   margin:0 auto;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .tabla th,
@@ -162,9 +207,11 @@ export default {
 }
 .select-container{
   display:flex;
+  align-items: flex-start;
   gap:10px;
   width:50%;
   margin-left: 13px;
+  margin-bottom: 10px;
   /* border:1px solid black; */
 }
 .input-container{
@@ -184,6 +231,36 @@ export default {
   border:1px solid rgb(38,146,253);
   margin-bottom: 10px;
   filter: drop-shadow(0px 0px 2px rgba(227, 244, 235, 0.5));
+}
+
+.date-container{
+  display:flex;
+  justify-content: space-between;
+  padding-bottom: 5px;
+  margin-left: 10px;
+}
+.date-container label{
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.btn-export{
+  padding: 5px 10px;
+  cursor:pointer;
+  background-color: rgb(38,166,154);
+  color:white;
+  border-color:white;
+}
+.pdf{
+  background-color: rgb(232,0,18);
+}
+.btn-export:hover{
+  border-color:black;
+}
+.btn-container{
+  margin-right: 20px;
+  display:flex;
+  align-items: center;
+  gap:10px;
 }
 
 </style>

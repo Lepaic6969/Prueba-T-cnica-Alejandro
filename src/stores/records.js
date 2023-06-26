@@ -5,7 +5,7 @@ export const useRecordsStore = defineStore('records', {
      records:[
       {
         id:1,
-        activity_date:"2021-06-25",
+        activity_date:"2023-06-25",
         activity_name: "Encuentro de Integración",
         consecutive: "F1",
         cultural_right_id: "Referencias a comunidades culturales",
@@ -17,7 +17,7 @@ export const useRecordsStore = defineStore('records', {
       },
       {
         id:2,
-        activity_date:"2022-06-25",
+        activity_date:"2023-06-24",
         activity_name: "Lectura al Parque",
         consecutive: "F2",
         cultural_right_id: "Identidad y patrimonios culturales",
@@ -29,7 +29,7 @@ export const useRecordsStore = defineStore('records', {
       },
       {
         id:3,
-        activity_date:"2023-06-25",
+        activity_date:"2023-06-20",
         activity_name: "Lenguaje de Señas",
         consecutive: "F3",
         cultural_right_id: "Cooperación cultural",
@@ -41,7 +41,7 @@ export const useRecordsStore = defineStore('records', {
       },
       {
         id:4,
-        activity_date:"2023-06-25",
+        activity_date:"2023-06-10",
         activity_name: "Lenguaje de Señas",
         consecutive: "F4",
         cultural_right_id: "Cooperación cultural",
@@ -53,9 +53,9 @@ export const useRecordsStore = defineStore('records', {
       },
       {
         id:5,
-        activity_date:"2023-06-25",
+        activity_date:"2023-06-1",
         activity_name: "Lenguaje de Señas",
-        consecutive: "F4",
+        consecutive: "F5",
         cultural_right_id: "Información y comunicación",
         expertise_id: "Juegos tradicionales",
         final_hour: "11:50",
@@ -65,9 +65,6 @@ export const useRecordsStore = defineStore('records', {
       }
      ]
   }),
-  getters: {
-    // doubleCount: (state) => state.count * 2,
-  },
   actions: {
     addRecord(record) {
       this.records.push(record)

@@ -83,6 +83,7 @@
 <script>
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import exportFromJSON from 'export-from-json'
 
 import {defineAsyncComponent} from 'vue'
 import {expertises,cultural_rights,nacs} from '../assets/data-selects'
@@ -149,7 +150,10 @@ export default {
       });
     },
     handleXLS(){
-      alert('Exportando a XLS')
+      const data = this.leakedRecords
+      const fileName = 'tabla'
+      const exportType =  exportFromJSON.types.xls
+      exportFromJSON({ data, fileName, exportType })
     }
   },
   watch:{
